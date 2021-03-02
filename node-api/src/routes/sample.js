@@ -26,14 +26,17 @@ router.get('/users', async (req, res) => { //marked function as async because an
 
 })
 
-// router.get('/users/:id', (req, res) => {
-//     pool
-//     .query('SELECT * FROM users WHERE id = $1', 
-//     [req.params.id])
-//     .then((queryResult) => {
-//         res.send(queryResult.rows[0])
-//     })
+router.get('/users/:id', async (req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM users WHERE id = $1', [req.params.id]) //rows is 1 element array if there was a user w/matchind id or empty array if no match
+        const user = rows[0]
+    
+        user ? res.send(user) : res.status(404).send("ID you put in did not match any user")
+    } catch (error) {//will enter this block if any code in try block errors
+        console.error(error);
+        res.status(404).send("You put in something that's not a #. Perhaps trying to SQL injection attack me bro?")
+    }
 
-// })
+})
 
 module.exports = router;
