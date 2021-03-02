@@ -1,26 +1,9 @@
-const express = require('express')
-const sampleRouter = require('./routes/sample')
-const pg = require('pg')
+const pool = require('./pool')
+const createsAndConfiguresServer = require('./app')
 
 
-const app = express()
-
-//B4: setting up server specs
-app.use(express.json())
-app.use(sampleRouter)
-//AFTER: setting up server specs
-
-app.listen(3333, () => {
+createsAndConfiguresServer().listen(3333, () => {
     console.log('Yo API is UP!')
-})
-
-
-const pool = new pg.Pool({ // connecting to db
-    host: 'localhost',
-    port: 5432,
-    database: 'instagram-clone-used-by-node-api',
-    user: 'marcusslee95',
-    password: ''
 })
 
 pool
