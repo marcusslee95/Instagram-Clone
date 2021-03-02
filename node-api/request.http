@@ -1,3 +1,9 @@
+###
+
+http://localhost:3333/testRoute1
+
+###
+
 http://localhost:3333/users/
 
 ###
@@ -15,6 +21,62 @@ http://localhost:3333/users/a
 ###
 # example of a sql injection attack (where request sender adds some malicious sql to their request. If this had executed it would have deleted our users table. Thankfully we wrote our query in such a way that 'Drop users' will never be run as it's own SQL statement
 http://localhost:3333/users/1;DROP TABLE users
+
+###
+
+POST http://localhost:3333/users/ HTTP/1.1
+content-type: application/json
+
+{
+    "username": "MickJagger69",
+    "phone": "6996697086"
+}
+
+###
+
+POST http://localhost:3333/users/ HTTP/1.1
+content-type: application/json
+
+{
+    "phone": "6996697086"
+}
+
+###
+
+POST http://localhost:3333/users/ HTTP/1.1
+content-type: application/json
+
+{
+    "username": "MickJagger69",
+    "email": "micky6969@dirty.com"
+}
+
+###
+
+POST http://localhost:3333/users/ HTTP/1.1
+content-type: application/json
+
+{
+    "email": "micky6969@dirty.com"
+}
+
+###
+
+DELETE http://localhost:3333/users/5348 HTTP/1.1
+content-type: application/json
+
+###
+
+DELETE http://localhost:3333/users/asfwfwe HTTP/1.1
+content-type: application/json
+
+
+###
+
+DELETE http://localhost:3333/users/1;DROP TABLE users HTTP/1.1
+content-type: application/json
+
+# ###
 
 # ###
 
