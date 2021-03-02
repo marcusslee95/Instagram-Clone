@@ -1,6 +1,5 @@
 const express = require('express')
 const sampleRouter = require('./routes/sample')
-// const pool = require('./pool')
 const pg = require('pg')
 
 
@@ -19,7 +18,6 @@ app.listen(3333, () => {
 const pool = new pg.Pool({ // connecting to db
     host: 'localhost',
     port: 5432,
-    // database: 'socialnetwork',
     database: 'instagram-clone-used-by-node-api',
     user: 'marcusslee95',
     password: ''
