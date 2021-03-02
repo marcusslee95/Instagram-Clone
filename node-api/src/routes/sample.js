@@ -82,18 +82,36 @@ router.post('/users/', async (req, res) => {
 //stuck on updating an existing user cuz.... request sender could send any # of things like they might just want to update the phone so just send phone, just email, both, bio, avatar, etc....
 //so should I just create if cases for every scenario? seems rather crude. should be a better way
 //also didn't have this problem in Gridder class cuz just assumed request sender would send in certain things all the time
-// router.put('/users/:id', async (req, res) => { 
-//     const
-//     try {
-//         const queryResult = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [req.params.id]) 
-//         const deletedUser = queryResult.rows[0]; 
-    
-//         deletedUser ? res.send(deletedUser) : res.status(404).send('Nothing was deleted because ID you put in did not match any user')    
-//     } catch (error) {
-//         console.error(error)
-//         res.status(404).send('Broooo... to delete a user you gots to send an actual id as in an integer. Not some other stuff')
-//     }
+router.put('/users/:id', async (req, res) => { 
+    //as we have done in above endpoints... we're not going to do api side validation of if id was proper value. Because db handling that. All we need to do here is if db throws an error then handle it
+    try {
+        //the idea here is to 1. create a generic query string that builds itself using the values request sender provided -> this way the query string will change according to what values request send provides
+        //2. at the same time we are building the values array that we use to pass values into our query parameters
+        const queryPt1 = 'UPDATE users SET ' 
+        let queryPt2 = ''
+        const valuesToUpdateUserWith = req.body
+        const keys = Object.keys(valuesToUpdateUserWith)
+        const values = []
+        await keys.forEach((key, index) => {
+            const realQueryParameter = index + 1
+            queryPt2 = (realQueryParameter == 1 ? queryPt2 + ' ' + key + ' = $' + realQueryParameter : queryPt2 + ', ' + key + ' = $' + realQueryParameter)
+            const value = valuesToUpdateUserWith[key]
+            values.push(value)
+        })
+        values.push(req.params.id)
+        const queryPt3 = ' WHERE id = $' + values.length + ' RETURNING *'
+        // 'UPDATE users SET bio = $1, username = $2 WHERE id = $3 RETURNING *'
+        const query = queryPt1 + queryPt2 + queryPt3
+        console.log(query)
+        console.log(values)
+        const queryResult = await pool.query(query, values)
+        const updatedUser = queryResult.rows[0]
 
-// })
+        res.send(updatedUser)
+    } catch(error) {
+        console.error(error)
+        res.status(404).send('you boofed up son. Maybe you had an id in your request url that was not a number. Maybe you sent in an object with fields that did not exist in the db. Maybe you did send in the right fields but for those fields provided the wrong type of value. Who knows. Just know son. One way or another you dun boofed')
+    }
+})
 
 module.exports = router;

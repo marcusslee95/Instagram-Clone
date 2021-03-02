@@ -62,7 +62,7 @@ content-type: application/json
 
 ###
 
-DELETE http://localhost:3333/users/5348 HTTP/1.1
+DELETE http://localhost:3333/users/5346 HTTP/1.1
 content-type: application/json
 
 ###
@@ -76,7 +76,67 @@ content-type: application/json
 DELETE http://localhost:3333/users/1;DROP TABLE users HTTP/1.1
 content-type: application/json
 
-# ###
+###
+
+PUT http://localhost:3333/users/5359 HTTP/1.1
+content-type: application/json
+
+{
+    "phone": "7777777777"
+}
+
+###
+
+PUT http://localhost:3333/users/5359 HTTP/1.1
+content-type: application/json
+
+{
+    "email": "mickyLucky@maroon5.com"
+}
+
+###
+
+PUT http://localhost:3333/users/5359 HTTP/1.1
+content-type: application/json
+
+{
+    "email": "mickyNOTTTTLucky@maroon5.com",
+    "phone": "66666666666"
+}
+
+###
+
+PUT http://localhost:3333/users/5359 HTTP/1.1
+content-type: application/json
+
+{
+    "email": "mickyWHOCARESABOUTBEINGLucky@maroon5.com",
+    "phone": "0000000000",
+    "bio": "The name's jagger. MickJagger",
+    "avatar": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Mick_Jagger_Deauville_2014.jpg"
+}
+
+###
+
+PUT http://localhost:3333/users/avadacadabraaa HTTP/1.1
+content-type: application/json
+
+{
+    "email": "disneymickey@maroon5.com"
+}
+
+###
+
+PUT http://localhost:3333/users/5359 HTTP/1.1
+content-type: application/json
+
+{
+    "emaill": "disneymickey@maroon5.com"
+}
+
+###
+
+
 
 # ###
 
