@@ -116,4 +116,44 @@ router.get('/userWithHighestId', async (req, res) => { //userWithHighestId url w
 
 })
 
+router.get('/posts/:userID', async (req, res) => { //allPostsByAParticularUser... so that's getting information from multiple tables (users, posts). A telltale sign we're going to have to use joins.
+    //1. join posts and users table to get info about post and user who created that post onto the same row
+    //2. just get the rows where users id is correct
+    const queryResult = await pool.query('SELECT * FROM posts JOIN users ON posts.user_id = users.id WHERE users.id = $1', [req.params.userID]) 
+    
+    res.send(queryResult.rows)
+
+})
+
+router.get('/numberOfPostsByEachUser', async (req, res) => { //I'm not sure what's the best way to represent this resource as url.... like /posts is all posts.... but it's more than just about one user so... posts/:userID is too narrow.... oh well. Anways it involves getting information from multiple tables (users, posts). A telltale sign we're going to have to use joins.
+    //1. join posts and users table to get info about post and user who created that post onto the same row
+    //2. do group by username to get all the unique users and put all the rows in each group
+    //3. do count for each group to see how many posts were created by each user
+    const queryResult = await pool.query('SELECT username, COUNT(*) FROM (SELECT * FROM posts JOIN users ON users.id = posts.user_id) AS postsAndUsers GROUP BY username ') 
+    
+    res.send(queryResult.rows)
+
+})
+
+router.get('/numberOfPostsByAParticularUser/:username', async (req, res) => {//#likes a certain user gave out
+    const queryResult = await pool.query('SELECT COUNT(*) FROM posts JOIN users ON users.id = posts.user_id WHERE username = $1 ', [req.params.username]) 
+    
+    res.send(queryResult.rows[0])
+
+})
+
+router.get('/numberOfLikesByEachUser', async (req, res) => {//pretty much same as previous endpoint just swap out posts and likes tables
+    const queryResult = await pool.query('SELECT username, COUNT(*) FROM (SELECT * FROM likes JOIN users ON users.id = likes.user_id) AS likesAndUsers GROUP BY username ') 
+    
+    res.send(queryResult.rows)
+
+})
+
+router.get('/numberOfLikesByAParticularUser/:username', async (req, res) => {//#likes a certain user gave out
+    const queryResult = await pool.query('SELECT COUNT(*) FROM likes JOIN users ON users.id = likes.user_id WHERE username = $1 ', [req.params.username]) 
+    
+    res.send(queryResult.rows[0])
+
+})
+
 module.exports = router;

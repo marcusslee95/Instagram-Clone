@@ -62,7 +62,7 @@ content-type: application/json
 
 ###
 
-DELETE http://localhost:3333/users/5346 HTTP/1.1
+DELETE http://localhost:3333/users/5359 HTTP/1.1
 content-type: application/json
 
 ###
@@ -136,44 +136,27 @@ content-type: application/json
 
 ###
 
+http://localhost:3333/userWithHighestId
 
+###
 
-# ###
+http://localhost:3333/numberOfPostsByEachUser
 
-# POST http://localhost:3005/users/ HTTP/1.1
-# content-type: application/json
+###
 
-# {
-#     "username": "MickJagger69",
-#     "bio": "I am Mick"
-# }
+http://localhost:3333/posts/3
 
-# ###
+###
 
-# PUT http://localhost:3005/users/1 HTTP/1.1
-# content-type: application/json
+http://localhost:3333/numberOfPostsByAParticularUser/Marquis.Johnson52
 
-# {
-#     "username": "MarcusSadFace9000",
-#     "bio": "I am a sad Marcus"
-# }
+###
 
-# ###
+http://localhost:3333/numberOfLikesByEachUser
 
-# PUT http://localhost:3005/users/4 HTTP/1.1
-# content-type: application/json
+###
 
-# {
-#     "username": "MarcusSadFace9000",
-#     "bio": "I am a sad Marcus"
-# }
+http://localhost:3333/numberOfLikesByAParticularUser/Deion_Lynch
 
-# ###
+###
 
-# DELETE http://localhost:3005/users/1 HTTP/1.1
-# content-type: application/json
-
-# ###
-
-# DELETE http://localhost:3005/users/4 HTTP/1.1
-# content-type: application/json
