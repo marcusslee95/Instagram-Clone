@@ -109,4 +109,11 @@ router.put('/users/:id', async (req, res) => {
     }
 })
 
+router.get('/userWithHighestId', async (req, res) => { //userWithHighestId url will always refer to.... well the user with highest id
+    const queryResult = await pool.query('SELECT * FROM users ORDER BY id DESC LIMIT 1') 
+    
+    res.send(queryResult.rows[0])
+
+})
+
 module.exports = router;
