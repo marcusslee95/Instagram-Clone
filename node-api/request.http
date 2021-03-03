@@ -175,3 +175,18 @@ http://localhost:3333/usernameOfFollowersOfAParticularUser/1
 http://localhost:3333/usernameOfPeopleAParticularUserIsFollowing/1
 
 ###
+
+POST http://localhost:3333/followers HTTP/1.1
+content-type: application/json
+
+{
+    "idOfUserWhoMadeClick": 5363,
+    "idOfUserWhoTheyJustFollowed": 5362
+}
+
+###
+
+DELETE http://localhost:3333/followers/5363&5362 HTTP/1.1
+content-type: application/json
+
+###

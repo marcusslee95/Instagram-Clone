@@ -194,4 +194,19 @@ router.get('/usernameOfPeopleAParticularUserIsFollowing/:id', async (req, res) =
 
 })
 
+router.post('/followers', async (req, res) => {//userClickedFollowOnAnotherUserProfile -> post method because we're creating a new row in followers table -> we're not sure how 1. we'll get the info on user who just made the click 2. info on user that they just followed. Let's just say for now the pass id of both in a path parameter. Actually no that goes against our naming convention where we just have the table we are creating into. So we'll send it in the request body
+    const {idOfUserWhoMadeClick, idOfUserWhoTheyJustFollowed }= req.body
+    const queryResult = await pool.query('INSERT INTO followers (follower_id, leader_id) VALUES ($1, $2) RETURNING *', [idOfUserWhoMadeClick, idOfUserWhoTheyJustFollowed]) 
+    
+    res.send(queryResult.rows)
+
+})
+
+router.delete('/followers/:idOfUserWhoMadeClick&:idOfUserWhoTheyJustFollowed', async (req, res) => {//userClickedUnFollowOnAnotherUserProfile aka. they were the follower 
+    const queryResult = await pool.query('DELETE FROM followers WHERE follower_id = $1 AND leader_id = $2 RETURNING *', [req.params.idOfUserWhoMadeClick, req.params.idOfUserWhoTheyJustFollowed]) 
+    // DELETE FROM users WHERE id = $1 RETURNING *
+    res.send(queryResult.rows)
+
+})
+
 module.exports = router;
