@@ -160,3 +160,11 @@ http://localhost:3333/numberOfLikesByAParticularUser/Deion_Lynch
 
 ###
 
+http://localhost:3333/numberOfFollowersOfAParticularUser/1
+
+###
+
+http://localhost:3333/numberOfPeopleAParticularUserIsFollowing/1
+
+###
+

@@ -135,7 +135,7 @@ router.get('/numberOfPostsByEachUser', async (req, res) => { //I'm not sure what
 
 })
 
-router.get('/numberOfPostsByAParticularUser/:username', async (req, res) => {//#likes a certain user gave out
+router.get('/numberOfPostsByAParticularUser/:username', async (req, res) => {//#posts a certain user has made
     const queryResult = await pool.query('SELECT COUNT(*) FROM posts JOIN users ON users.id = posts.user_id WHERE username = $1 ', [req.params.username]) 
     
     res.send(queryResult.rows[0])
@@ -155,5 +155,27 @@ router.get('/numberOfLikesByAParticularUser/:username', async (req, res) => {//#
     res.send(queryResult.rows[0])
 
 })
+
+
+
+router.get('/numberOfFollowersOfAParticularUser/:id', async (req, res) => {//even though I could have passed in username and do a join insteadd... that would not have shown the value of the bridge table. Where can see all that info in one table
+    // const queryResult = await pool.query('SELECT * FROM followers WHERE leader_id = $1 ', [req.params.id]) 
+    // res.send(queryResult.rows)
+    const queryResult = await pool.query('SELECT COUNT(*) FROM followers WHERE leader_id = $1 ', [req.params.id]) 
+    
+    res.send(queryResult.rows[0])
+
+})
+
+router.get('/numberOfPeopleAParticularUserIsFollowing/:id', async (req, res) => {//even though I could have passed in username and do a join insteadd... that would not have shown the value of the bridge table. Where can see all that info in one table
+    // const queryResult = await pool.query('SELECT * FROM followers WHERE follower_id = $1 ', [req.params.id]) 
+    // res.send(queryResult.rows)
+    const queryResult = await pool.query('SELECT COUNT(*) FROM followers WHERE leader_id = $1 ', [req.params.id]) 
+    
+    res.send(queryResult.rows[0])
+
+})
+
+
 
 module.exports = router;
