@@ -176,6 +176,22 @@ router.get('/numberOfPeopleAParticularUserIsFollowing/:id', async (req, res) => 
 
 })
 
+router.get('/usernameOfFollowersOfAParticularUser/:id', async (req, res) => {//even though I could have passed in username and do a join insteadd... that would not have shown the value of the bridge table. Where can see all that info in one table
+    //realize can't just look at followers table because it has just follwer id and user that's being followed id -> need join -> w/what? -> users table where can get username of follower
+    // const queryResult = await pool.query('SELECT username, leader_id FROM followers JOIN users ON followers.follower_id = users.id WHERE followers.leader_id = $1', [req.params.id]) 
+    const queryResult = await pool.query('SELECT username FROM followers JOIN users ON followers.follower_id = users.id WHERE followers.leader_id = $1', [req.params.id]) 
 
+    res.send(queryResult.rows)
+
+})
+
+router.get('/usernameOfPeopleAParticularUserIsFollowing/:id', async (req, res) => {
+    // const queryResult = await pool.query('SELECT * FROM followers JOIN users ON followers.leader_id = users.id WHERE followers.follower_id = $1', [req.params.id]) 
+    // const queryResult = await pool.query('SELECT username, followers.follower_id   FROM followers JOIN users ON followers.leader_id = users.id WHERE followers.follower_id = $1', [req.params.id]) 
+    const queryResult = await pool.query('SELECT username FROM followers JOIN users ON followers.leader_id = users.id WHERE followers.follower_id = $1', [req.params.id]) 
+    
+    res.send(queryResult.rows)
+
+})
 
 module.exports = router;

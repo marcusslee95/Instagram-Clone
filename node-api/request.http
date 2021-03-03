@@ -168,3 +168,10 @@ http://localhost:3333/numberOfPeopleAParticularUserIsFollowing/1
 
 ###
 
+http://localhost:3333/usernameOfFollowersOfAParticularUser/1
+
+###
+
+http://localhost:3333/usernameOfPeopleAParticularUserIsFollowing/1
+
+###
