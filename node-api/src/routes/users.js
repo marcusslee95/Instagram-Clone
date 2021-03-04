@@ -168,7 +168,7 @@ router.get('/numberOfFollowersOfAParticularUser/:id', async (req, res) => {//eve
 router.get('/numberOfPeopleAParticularUserIsFollowing/:id', async (req, res) => {//even though I could have passed in username and do a join insteadd... that would not have shown the value of the bridge table. Where can see all that info in one table
     // const queryResult = await pool.query('SELECT * FROM followers WHERE follower_id = $1 ', [req.params.id]) 
     // res.send(queryResult.rows)
-    const queryResult = await pool.query('SELECT COUNT(*) FROM followers WHERE leader_id = $1 ', [req.params.id]) 
+    const queryResult = await pool.query('SELECT COUNT(*) FROM followers WHERE follower_id = $1 ', [req.params.id]) 
     
     res.send(queryResult.rows[0])
 
@@ -228,6 +228,30 @@ router.get('/topFourHashtagsInPostsOfThisUser/:id', async (req, res) => {//so mo
 
 
     res.send(rows)
+})
+
+router.get('/allTheDetailsToShowWhenGoToAProfilePageOFAUser/:userId', async (req, res) => {// can't just say 'users/:userId' because what we want to show is info beyond just what's in user's table -> the plan is to write multiple queries to get the different data that we need to show, combine them in one thing, and then send it back
+    const queryResult1 = await pool.query('SELECT username, status, avatar, bio FROM users WHERE id = $1', [req.params.userId]) 
+    // const queryResult = await pool.query('SELECT username, followers.follower_id   FROM followers JOIN users ON followers.leader_id = users.id WHERE followers.follower_id = $1', [req.params.id]) 
+    // const queryResult = await pool.query('SELECT username FROM followers JOIN users ON followers.leader_id = users.id WHERE followers.follower_id = $1', [req.params.id]) 
+    const queryResult2 = await pool.query('SELECT COUNT(*) AS numOfPosts FROM posts WHERE posts.user_id = $1', [req.params.userId]) 
+    const queryResult3 = await pool.query('SELECT COUNT(*) AS numOfFollowers FROM followers WHERE leader_id = $1 ', [req.params.userId]) 
+    const queryResult4 = await pool.query('SELECT COUNT(*) AS numOfFollowing FROM followers WHERE follower_id = $1 ', [req.params.userId]) 
+    const queryResult5 = await pool.query('SELECT title FROM (SELECT title FROM hashtags WHERE id IN (SELECT hashtag_id FROM hashtags_posts WHERE post_id IN (SELECT id FROM posts WHERE user_id = $1))) as hashtagsUserUsed GROUP BY title ORDER BY COUNT(*) DESC LIMIT 4', [req.params.userId])
+    const queryResult6 = await pool.query('SELECT url FROM posts WHERE user_id = $1 ', [req.params.userId]) 
+
+    // console.log (queryResult1.rows[0])
+    // console.log (queryResult2.rows[0])
+    // console.log (queryResult3.rows[0])
+    // console.log (queryResult4.rows[0]) , ...queryResult5 
+    // console.log (queryResult5.rows) 
+    // const queryResult = [queryResult1.rows[0], queryResult2.rows[0], queryResult3.rows[0], queryResult4.rows[0], queryResult5.rows, queryResult6.rows ] // <- a legitimate way to send values back. As an array of objects. Just wanted to get experimental and send back just a single objects w/all the fields in it
+    const queryResult = {...queryResult1.rows[0], ...queryResult2.rows[0], ...queryResult3.rows[0], ...queryResult4.rows[0]}
+    queryResult['topFourHashtags'] = queryResult5.rows
+    queryResult['photoUrls'] = queryResult6.rows
+    // console.log (queryResult)
+    res.send(queryResult)
+
 })
 
 module.exports = router;

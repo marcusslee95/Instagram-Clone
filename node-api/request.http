@@ -194,3 +194,7 @@ content-type: application/json
 http://localhost:3333/topFourHashtagsInPostsOfThisUser/12
 
 ###
+
+http://localhost:3333/allTheDetailsToShowWhenGoToAProfilePageOFAUser/17
+
+###
