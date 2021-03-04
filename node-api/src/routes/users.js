@@ -254,4 +254,27 @@ router.get('/allTheDetailsToShowWhenGoToAProfilePageOFAUser/:userId', async (req
 
 })
 
+router.get('/allTheDetailsToShowWhenGoToAPostPageOFAUser/:postId', async (req, res) => {// can't just say 'posts/:postId' because what we want to show is info beyond just what's in posts table -> it's safe to assume when the user clicks a post image / photo on someone else's profile page we'll get back some info about the post which is why i send over photoID in path parameter -> the plan is to write multiple queries to get the different data that we need to show, combine them in one thing, and then send it back
+    // const queryResult1 = await pool.query('SELECT url, caption FROM posts WHERE id = $1', [req.params.postId]) 
+
+    // const queryResult2 = await pool.query('SELECT username, x, y FROM ( SELECT user_id, x, y FROM photo_tags  WHERE post_id = $1 ) AS photoTagInfoAndUsername JOIN users ON users.id = photoTagInfoAndUsername.user_id', [req.params.postId]) //the only value we have available to us is the post id -> but we know that every post has a foreign key to the user who created it -> we can use that value to look find the correct user in the users table -> alternatively I could just do a join operation to attach the user row to the post and then get the username value but.... didn't I learn that join operations are costly / take time? Anyways chose to go w/this subquery way because thought it was more intuitive (aka. use postID info to get userId -> use userID to get username)
+    // const queryResult3 = await pool.query('SELECT COUNT(*) FROM likes WHERE post_id = $1 ', [req.params.postId]) 
+    // const queryResult4 = await pool.query('SELECT contents, updated_at FROM comments WHERE post_id = $1 ORDER BY updated_at DESC', [req.params.postId]) 
+    const queryResult5 = await pool.query('SELECT comment_id, COUNT(*) FROM likes WHERE comment_id IN ( SELECT id FROM comments WHERE post_id = $1 ORDER BY updated_at DESC ) GROUP BY comment_id', [req.params.postId])
+    // const queryResult6 = await pool.query('SELECT url FROM posts WHERE user_id = $1 ', [req.params.userId]) 
+
+    // console.log (queryResult1.rows[0])
+    // console.log (queryResult2.rows)
+    // console.log (queryResult3.rows[0])
+    // console.log (queryResult4.rows)
+    console.log (queryResult5.rows) 
+    // const queryResult = [queryResult1.rows[0], queryResult2.rows[0], queryResult3.rows[0], queryResult4.rows[0], queryResult5.rows, queryResult6.rows ] // <- a legitimate way to send values back. As an array of objects. Just wanted to get experimental and send back just a single objects w/all the fields in it
+    // const queryResult = {...queryResult1.rows[0], ...queryResult2.rows[0], ...queryResult3.rows[0], ...queryResult4.rows[0]}
+    // queryResult['topFourHashtags'] = queryResult5.rows
+    // queryResult['photoUrls'] = queryResult6.rows
+    // console.log (queryResult)
+    // res.send(queryResult1)
+
+})
+
 module.exports = router;
