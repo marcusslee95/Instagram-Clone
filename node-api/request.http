@@ -202,3 +202,34 @@ http://localhost:3333/allTheDetailsToShowWhenGoToAProfilePageOFAUser/17
 http://localhost:3333/allTheDetailsToShowWhenGoToAPostPageOFAUser/1
 
 ###
+
+POST http://localhost:3333/likes HTTP/1.1
+content-type: application/json
+
+{
+    "idOfUserLikedThePost": 8,
+    "idOfThePost": 1
+}
+
+###
+
+POST http://localhost:3333/likes HTTP/1.1
+content-type: application/json
+
+{
+    "idOfUserLikedTheComment": 8,
+    "idOfTheComment": 1
+}
+
+###
+
+POST http://localhost:3333/comments HTTP/1.1
+content-type: application/json
+
+{
+    "idOfUserMadeTheComment": 8,
+    "idOfThePostCommentWasMadeOn": 1,
+    "content": "WOAHHH This DIY tool is so coooooooool!!!!!!!"
+}
+
+###

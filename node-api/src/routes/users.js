@@ -278,4 +278,29 @@ const queryResult1 = await pool.query('SELECT url, caption FROM posts WHERE id =
 
 })
 
+router.post('/likes', async (req, res) => {//user just liked this post so have to create a like in likes table... OR! user just liked this comment so have to do the same but instead of filling post_id fill in comment_id
+    const fieldNames = Object.keys(req.body)
+    if (fieldNames.includes("idOfThePost") && fieldNames.includes("idOfUserLikedThePost")){
+        const {idOfUserLikedThePost, idOfThePost }= req.body
+        const queryResult = await pool.query('INSERT INTO likes (user_id, post_id) VALUES ($1, $2) RETURNING *', [idOfUserLikedThePost, idOfThePost])
+        res.send(queryResult.rows) 
+    }
+    else if (fieldNames.includes("idOfTheComment") && fieldNames.includes("idOfUserLikedTheComment")){
+        const {idOfUserLikedTheComment, idOfTheComment }= req.body
+        const queryResult = await pool.query('INSERT INTO likes (user_id, comment_id) VALUES ($1, $2) RETURNING *', [idOfUserLikedTheComment, idOfTheComment])
+        res.send(queryResult.rows) 
+    }
+    
+
+})
+
+router.post('/comments', async (req, res) => {//a user just made a comment on a post
+    const {idOfUserMadeTheComment, idOfThePostCommentWasMadeOn, content }= req.body
+
+    const queryResult = await pool.query('INSERT INTO comments (contents, user_id, post_id) VALUES ($1, $2, $3) RETURNING *', [content, idOfUserMadeTheComment, idOfThePostCommentWasMadeOn])
+    res.send(queryResult.rows) 
+
+})
+
+
 module.exports = router;
