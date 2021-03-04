@@ -273,8 +273,8 @@ const queryResult1 = await pool.query('SELECT url, caption FROM posts WHERE id =
     queryResult['tagsonPhoto'] = queryResult2.rows
     queryResult['commentsOnPostStartingFromMostRecent'] = queryResult4.rows
     queryResult['numOfLikesOnEachComment'] = queryResult5.rows
-    console.log (queryResult)
-    // res.send(queryResult1)
+    // console.log (queryResult)
+    res.send(queryResult)
 
 })
 
