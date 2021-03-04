@@ -116,10 +116,8 @@ router.get('/userWithHighestId', async (req, res) => { //userWithHighestId url w
 
 })
 
-router.get('/posts/:userID', async (req, res) => { //allPostsByAParticularUser... so that's getting information from multiple tables (users, posts). A telltale sign we're going to have to use joins.
-    //1. join posts and users table to get info about post and user who created that post onto the same row
-    //2. just get the rows where users id is correct
-    const queryResult = await pool.query('SELECT * FROM posts JOIN users ON posts.user_id = users.id WHERE users.id = $1', [req.params.userID]) 
+router.get('/posts/:userID', async (req, res) => { //allPostsByAParticularUser... so all posts information is in posts table.
+    const queryResult = await pool.query('SELECT * FROM posts WHERE posts.user_id = $1', [req.params.userID]) 
     
     res.send(queryResult.rows)
 
