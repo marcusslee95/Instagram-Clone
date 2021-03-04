@@ -144,7 +144,7 @@ http://localhost:3333/numberOfPostsByEachUser
 
 ###
 
-http://localhost:3333/posts/3
+http://localhost:3333/posts/5
 
 ###
 
@@ -188,5 +188,9 @@ content-type: application/json
 
 DELETE http://localhost:3333/followers/5363&5362 HTTP/1.1
 content-type: application/json
+
+###
+
+http://localhost:3333/topFourHashtagsInPostsOfThisUser/12
 
 ###

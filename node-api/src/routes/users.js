@@ -207,4 +207,27 @@ router.delete('/followers/:idOfUserWhoMadeClick&:idOfUserWhoTheyJustFollowed', a
 
 })
 
+router.get('/topFourHashtagsInPostsOfThisUser/:id', async (req, res) => {//so more specifically this would be those hashtags in the caption of a user's post
+    //Step 1: get all the instances of hashtags used in user's many posts
+    // const { rows } = await pool.query('SELECT * FROM posts WHERE user_id = $1', [req.params.id])
+    // const { rows } = await pool.query('SELECT id FROM posts WHERE user_id = $1', [req.params.id])
+    // const { rows } = await pool.query('SELECT * FROM hashtags_posts WHERE post_id IN (SELECT id FROM posts WHERE user_id = $1)', [req.params.id])
+    // const { rows } = await pool.query('SELECT * FROM hashtags WHERE id IN (SELECT hashtag_id FROM hashtags_posts WHERE post_id IN (SELECT id FROM posts WHERE user_id = $1))', [req.params.id])
+
+      //*gets all the posts of the user -> uses all those posts to find hashtags in those posts 
+    // const { rows } = await pool.query('SELECT title FROM hashtags WHERE id IN (SELECT hashtag_id FROM hashtags_posts WHERE post_id IN (SELECT id FROM posts WHERE user_id = $1))', [req.params.id])
+  
+    
+    //step 2: group by to pick out the unique hashtags and then count(*) to get # times they appear
+    //*get all the unique hashtags 
+    // const { rows } = await pool.query('SELECT title, COUNT(*) FROM (SELECT title FROM hashtags WHERE id IN (SELECT hashtag_id FROM hashtags_posts WHERE post_id IN (SELECT id FROM posts WHERE user_id = $1))) as hashtagsUserUsed GROUP BY title', [req.params.id])
+
+    //step 3: pick the 4 hashtags w/the highest count
+    //*Show only the 4 hashtags that appeared the most in posts.-> you can't really tell it's working in this data set because all the hashtags happen only once for the most part
+    const { rows } = await pool.query('SELECT title, COUNT(*) FROM (SELECT title FROM hashtags WHERE id IN (SELECT hashtag_id FROM hashtags_posts WHERE post_id IN (SELECT id FROM posts WHERE user_id = $1))) as hashtagsUserUsed GROUP BY title ORDER BY COUNT(*) DESC LIMIT 4', [req.params.id])
+
+
+    res.send(rows)
+})
+
 module.exports = router;
