@@ -302,5 +302,23 @@ router.post('/comments', async (req, res) => {//a user just made a comment on a 
 
 })
 
+router.get('/postsContainingAParticularHashtag/:hashtagTitle', async (req, res) => {//show all the posts that have a certain hashtag after user searches for a hashtag -> normally would name the endpoint '/posts/:hashtagTitle' but /posts/:id already exists... 
+    //Strategy: use the input hashtag title to find the id of the hashtag in hashtags table -> use id to find post id of all posts that have that hashtag_id in hashtags_posts table -> use all post_ids you get back to get all the details on the relevant posts in posts table
+    
+    const queryResult = await pool.query("SELECT * FROM posts WHERE id IN (SELECT post_id FROM hashtags_posts WHERE hashtag_id = (SELECT id FROM hashtags WHERE title = $1) )", [req.params.hashtagTitle]) 
+    // const queryResult = await pool.query("SELECT * FROM hashtags WHERE title = $1", [req.params.hashtagTitle]) 
+    // const queryResult = await pool.query("(SELECT post_id FROM hashtags_posts WHERE hashtag_id = (SELECT id FROM hashtags WHERE title = $1) )", [req.params.hashtagTitle]) 
+    res.send(queryResult.rows)
+
+})
+
+router.get('/top100UsersWithMostFollowers', async (req, res) => {    
+    const queryResult = await pool.query('SELECT username, numFollowers FROM  (SELECT leader_id,  COUNT(*) AS numFollowers FROM followers  GROUP BY leader_id ORDER BY numFollowers DESC LIMIT 100) AS userBeingFollowedIdAndNumFollowers JOIN users ON leader_id = users.id ORDER BY numFollowers DESC') 
+    res.send(queryResult.rows)
+
+})
+
+
+
 
 module.exports = router;
