@@ -318,7 +318,14 @@ router.get('/top100UsersWithMostFollowers', async (req, res) => {
 
 })
 
+router.get('/top10TrendingHashtags', async (req, res) => {    // Wanted to define trending as in the past week but since data's most recent entries are 2010 I just did some placeholder date filter aka. instead of not looking at hashtags created before a week ago I don't look at hashtags created before 2010
+    //STRATEGY: look at all hashtags past a certain date in the hashtags table -> join those select hashtags to the hashtags_posts rows and group by title to get all the unique hashtags -> count rows in those groups to get # of occurrences of each hashtag -> get top 10 hashtags by ordering by COUNT(*) DESC and LIMIT = 10
+    //original strategy was getting just id of all hashtags after a certain date and then using those id values to match hashtag_posts with one of those hashtag_id and then doing the same group by stuff....But realized if I only retrieve the ids then I won't have the hashtag titles and if I want both the id column and title column i can no longer use it in WHERE clause... so stopped pursuing
+    // const queryResult = await pool.query("SELECT title, COUNT(*) AS numOfOccurrences FROM (SELECT id, title FROM hashtags  WHERE created_at >= '2010-01-01 00:00:00' ORDER BY created_at DESC ) as allHashtagsPastCertainDate JOIN hashtags_posts ON allHashtagsPastCertainDate.id = hashtags_posts.hashtag_id GROUP BY title  ORDER BY numOfOccurrences") 
+    const queryResult = await pool.query("SELECT title, COUNT(*) AS numOfOccurrences FROM (SELECT id, title FROM hashtags  WHERE created_at >= '2010-01-01 00:00:00' ORDER BY created_at DESC ) as allHashtagsPastCertainDate JOIN hashtags_posts ON allHashtagsPastCertainDate.id = hashtags_posts.hashtag_id GROUP BY title  ORDER BY numOfOccurrences DESC LIMIT 10") 
+    res.send(queryResult.rows)
 
+})
 
 
 module.exports = router;
